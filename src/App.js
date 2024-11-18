@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import './App.css';
 import task from "./tasks.json";
 
@@ -50,6 +50,7 @@ const interfaces = [
 
 
 const Component = () => {
+  const lsfElementRef = useRef(null);
   const lsfRef = useRef(null);
 
   useEffect(() => {
@@ -92,35 +93,56 @@ const Component = () => {
       onSelectAnnotation: onSelectAnnotation,
       onNextTask: onNextTask,
       onPrevTask: onPrevTask,
-
-
     };
 
-    const lsf = new window.LabelStudio(lsfRef.current, configs);
+    lsfRef.current = new window.LabelStudio(lsfElementRef.current, configs);
   }, []);
-  const onSubmitDraft = () => {}
+  const onSubmitDraft = () => { }
   const onLabelStudioLoad = (LS) => {
     var c = LS.annotationStore.addAnnotation({
       userGenerate: true
     });
     LS.annotationStore.selectAnnotation(c.id);
   }
-  const onTaskLoad = () => {}
-  const onPresignUrlForProject = () => {}
-  const onStorageInitialized = () => {}
-  const onSubmitAnnotation = () => {}
-  const onUpdateAnnotation = () => {}
-  const onDeleteAnnotation = () => {}
-  const onSkipTask = () => {}
-  const onUnskipTask = () => {}
-  const onGroundTruth = () => {}
-  const onEntityCreate = () => {}
-  const onEntityDelete = () => {}
-  const onSelectAnnotation = () => {}
-  const onNextTask = () => {}
-  const onPrevTask = () => {}
+  const onTaskLoad = () => { }
+  const onPresignUrlForProject = () => { }
+  const onStorageInitialized = () => { }
+  const onSubmitAnnotation = () => { }
+  const onUpdateAnnotation = () => { }
+  const onDeleteAnnotation = () => { }
+  const onSkipTask = () => { }
+  const onUnskipTask = () => { }
+  const onGroundTruth = () => { }
+  const onEntityCreate = () => { }
+  const onEntityDelete = () => { }
+  const onSelectAnnotation = () => { }
+  const onNextTask = () => { }
+  const onPrevTask = () => { }
 
-  return <div ref={lsfRef} />
+
+  const handleOnClick = () => {
+    const store = lsfRef?.current.store;
+    console.log('store: ', store);
+
+    const selected = store?.annotationStore?.selected || {}
+    console.log('selected: ', selected);
+
+    const regionStore = selected?.regionStore || {};
+    console.log('regionStore: ', regionStore);
+
+    const regions = regionStore.regions || [];
+    console.log('regions: ', regions);
+
+    const texts = regions.map(region => region.text);
+    console.log('texts: ', texts);
+  }
+
+  return (
+    <div>
+      <div ref={lsfElementRef} ></div>
+      <button onClick={handleOnClick}>store</button>
+    </div>
+  )
 }
 
 function App() {
